@@ -62,7 +62,8 @@ class _ManagerHomePageState extends State<ManagerHomePage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Shared.me != null ? Shared.me['data']['attributes']['name'] : ""),
+          title: Text(
+              Shared.me != null ? Shared.me['data']['attributes']['name'] : ""),
           actions: [
             IconButton(
               onPressed: () {
@@ -145,7 +146,6 @@ class _WorkersTabState extends State<WorkersTab> {
 
   @override
   Widget build(BuildContext context) {
-
     print(Shared.workers);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -295,7 +295,7 @@ class _WorkersTabState extends State<WorkersTab> {
                                   });
                                   return;
                                 }
-                                widget._initPage().then((value){
+                                widget._initPage().then((value) {
                                   super.setState(() {
                                     loading = false;
                                   });
@@ -588,7 +588,11 @@ class _TasksTabState extends State<TasksTab> {
   final Backend _backend = Backend();
   bool loading = false;
   String error = "";
-  int? dropDownValue = Shared.workers != null ? Shared.workers.isNotEmpty ? Shared.workers[0]['id'] : null : null;
+  int? dropDownValue = Shared.workers != null
+      ? Shared.workers.isNotEmpty
+          ? Shared.workers[0]['id']
+          : null
+      : null;
 
   @override
   void initState() {
@@ -700,7 +704,7 @@ class _TasksTabState extends State<TasksTab> {
                                   });
                                   return;
                                 }
-                                widget._initPage().then((value){
+                                widget._initPage().then((value) {
                                   super.setState(() {
                                     loading = false;
                                   });
@@ -732,67 +736,51 @@ class _TasksTabState extends State<TasksTab> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: Shared.tasks['data'][index]['attributes']
-                                    ['status'] ==
-                                "rejected"
-                            ? TextButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text("Rejection reason"),
-                                          content: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              border: Border.all(
-                                                  color: Colors.grey),
-                                            ),
-                                            padding: EdgeInsets.all(10),
-                                            child: Text(Shared.tasks['data']
-                                                    [index]['attributes']
-                                                ['reason']),
-                                          ),
-                                        );
-                                      });
-                                },
-                                style: TextButton.styleFrom(
-                                  minimumSize: Size(30, 30),
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    padding: EdgeInsets.zero,
-                                alignment: AlignmentDirectional.centerStart),
-                                child: Text(
-                                  Shared.tasks['data'][index]['attributes']
-                                      ['worker']['attributes']['name'],
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 11, color: Colors.red),
-                                ),
-                              )
-                            : Text(Shared.tasks['data'][index]['attributes']
-                                ['worker']['attributes']['name']),
+                        leading: Text(Shared.tasks['data'][index]['attributes']
+                        ['worker']['attributes']['name']),
                         title: Center(
-                          child: IntrinsicHeight(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  Shared.tasks['data'][index]['attributes']['title'],
-                                  textAlign: TextAlign.center,
-                                ),
-                                VerticalDivider(
-                                  color: Colors.grey,
-                                  thickness: 2,
-                                ),
-                                Text(
-                                  Shared.tasks['data'][index]['attributes']['status'],
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                          child: Shared.tasks['data'][index]['attributes']
+                          ['status'] ==
+                              "rejected"
+                              ? TextButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("Rejection reason"),
+                                      content: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(5),
+                                          border: Border.all(
+                                              color: Colors.grey),
+                                        ),
+                                        padding: EdgeInsets.all(10),
+                                        child: Text(Shared.tasks['data']
+                                        [index]['attributes']
+                                        ['reason']),
+                                      ),
+                                    );
+                                  });
+                            },
+                            style: TextButton.styleFrom(
+                                minimumSize: Size(30, 30),
+                                tapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                                padding: EdgeInsets.zero,
+                                alignment:
+                                AlignmentDirectional.centerStart),
+                            child: Text(
+                              Shared.tasks['data'][index]['attributes']
+                              ['title'],
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.red),
                             ),
-                          ),
+                          )
+                              : Text(Shared.tasks['data'][index]['attributes']
+                          ['title']),
                         ),
                         subtitle: Text(
                           Shared.tasks['data'][index]['attributes']
@@ -800,151 +788,233 @@ class _TasksTabState extends State<TasksTab> {
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
-                        trailing: Wrap(
-                          spacing: -13,
+                        trailing: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    _titleController.text = Shared.tasks['data'][index]['attributes']['title'];
-                                    _descriptionController.text = Shared.tasks['data'][index]['attributes']['description'];
-                                    dropDownValue = Shared.tasks['data'][index]['attributes']['worker']['id'];
-                                    return StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return AlertDialog(
-                                          title: const Text('Edit task'),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              TextFormField(
-                                                controller: _titleController,
-                                                keyboardType: TextInputType.name,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderSide: BorderSide.none,
-                                                    borderRadius: BorderRadius.circular(15),
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              direction: Axis.vertical,
+                              spacing: -9,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            _titleController.text =
+                                                Shared.tasks['data'][index]
+                                                    ['attributes']['title'];
+                                            _descriptionController.text =
+                                                Shared.tasks['data'][index]
+                                                    ['attributes']['description'];
+                                            dropDownValue = Shared.tasks['data']
+                                                    [index]['attributes']['worker']
+                                                ['id'];
+                                            return StatefulBuilder(
+                                              builder: (context, setState) {
+                                                return AlertDialog(
+                                                  title: const Text('Edit task'),
+                                                  content: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      TextFormField(
+                                                        controller:
+                                                            _titleController,
+                                                        keyboardType:
+                                                            TextInputType.name,
+                                                        decoration: InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide.none,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(15),
+                                                          ),
+                                                          fillColor:
+                                                              Colors.grey[300],
+                                                          filled: true,
+                                                          hintText: "Title",
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 13),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 20),
+                                                      TextFormField(
+                                                        maxLines: 4,
+                                                        controller:
+                                                            _descriptionController,
+                                                        keyboardType:
+                                                            TextInputType.multiline,
+                                                        decoration: InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide.none,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(15),
+                                                          ),
+                                                          fillColor:
+                                                              Colors.grey[300],
+                                                          filled: true,
+                                                          hintText: "Description",
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 13),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 20),
+                                                      DropdownButton(
+                                                        value: dropDownValue,
+                                                        items: List.generate(
+                                                            Shared.workers.length,
+                                                            (index) => DropdownMenuItem(
+                                                                value: Shared
+                                                                        .workers[
+                                                                    index]['id'],
+                                                                child: Text(Shared
+                                                                                .workers[
+                                                                            index][
+                                                                        'attributes']
+                                                                    ['name']))),
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            dropDownValue =
+                                                                int.parse(value
+                                                                    .toString());
+                                                          });
+                                                        },
+                                                      ),
+                                                      SizedBox(height: 20),
+                                                      Text(
+                                                        error,
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  fillColor: Colors.grey[300],
-                                                  filled: true,
-                                                  hintText: "Title",
-                                                  hintStyle: const TextStyle(fontSize: 13),
-                                                ),
-                                              ),
-                                              SizedBox(height: 20),
-                                              TextFormField(
-                                                maxLines: 4,
-                                                controller: _descriptionController,
-                                                keyboardType: TextInputType.multiline,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderSide: BorderSide.none,
-                                                    borderRadius: BorderRadius.circular(15),
-                                                  ),
-                                                  fillColor: Colors.grey[300],
-                                                  filled: true,
-                                                  hintText: "Description",
-                                                  hintStyle: const TextStyle(fontSize: 13),
-                                                ),
-                                              ),
-                                              SizedBox(height: 20),
-                                              DropdownButton(
-                                                value: dropDownValue,
-                                                items: List.generate(
-                                                    Shared.workers.length,
-                                                        (index) => DropdownMenuItem(
-                                                        value: Shared.workers[index]['id'],
-                                                        child: Text(Shared.workers[index]
-                                                        ['attributes']['name']))),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    dropDownValue = int.parse(value.toString());
-                                                  });
-                                                },
-                                              ),
-                                              SizedBox(height: 20),
-                                              Text(
-                                                error,
-                                                style: TextStyle(color: Colors.red),
-                                              ),
-                                            ],
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text('cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: loading
-                                                  ? null
-                                                  : () async {
-                                                setState(() {
-                                                  loading = true;
-                                                  error = '';
-                                                });
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: loading
+                                                          ? null
+                                                          : () async {
+                                                              setState(() {
+                                                                loading = true;
+                                                                error = '';
+                                                              });
 
-                                                var result = await _backend.editTask(
-                                                    prefs.getString("token")!,
-                                                    Shared.tasks['data'][index]["id"],
-                                                    _titleController.text,
-                                                    _descriptionController.text,
-                                                    dropDownValue!);
+                                                              var result = await _backend.editTask(
+                                                                  prefs.getString(
+                                                                      "token")!,
+                                                                  Shared.tasks[
+                                                                          'data']
+                                                                      [index]["id"],
+                                                                  _titleController
+                                                                      .text,
+                                                                  _descriptionController
+                                                                      .text,
+                                                                  dropDownValue!);
 
-                                                if (_backend.statusCode > 300) {
-                                                  setState(() {
-                                                    error = result.toString();
-                                                    loading = false;
-                                                  });
-                                                  return;
-                                                }
-                                                widget._initPage().then((value){
-                                                  super.setState(() {
-                                                    loading = false;
-                                                  });
-                                                });
-                                                Navigator.of(context).pop();
+                                                              if (_backend
+                                                                      .statusCode >
+                                                                  300) {
+                                                                setState(() {
+                                                                  error = result
+                                                                      .toString();
+                                                                  loading = false;
+                                                                });
+                                                                return;
+                                                              }
+                                                              widget
+                                                                  ._initPage()
+                                                                  .then((value) {
+                                                                super.setState(() {
+                                                                  loading = false;
+                                                                });
+                                                              });
+                                                              Navigator.of(context)
+                                                                  .pop();
+                                                            },
+                                                      child: const Text(
+                                                        "Save",
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
                                               },
-                                              child: const Text(
-                                                "Save",
-                                              ),
-                                            ),
-                                          ],
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
-                                );
-                              },
-                              icon: Icon(
-                                Icons.edit,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                _backend
-                                    .deleteTask(prefs.getString("token")!,
-                                        Shared.tasks['data'][index]["id"])
-                                    .then((value) {
-                                  if (_backend.statusCode < 300) {
-                                    setState(() {
-                                      Shared.finishedLoadingTasks = false;
-                                    });
-                                    widget._initPage().then((value) {
-                                      setState(() {
-                                        Shared.finishedLoadingTasks = true;
-                                      });
-                                    });
-                                  } else {}
-                                });
-                              },
-                              icon: Icon(
-                                Icons.delete_forever,
-                                color: Colors.red,
-                              ),
+                                      icon: Icon(
+                                        Icons.edit,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _backend
+                                            .deleteTask(prefs.getString("token")!,
+                                                Shared.tasks['data'][index]["id"])
+                                            .then((value) {
+                                          if (_backend.statusCode < 300) {
+                                            setState(() {
+                                              Shared.finishedLoadingTasks = false;
+                                            });
+                                            widget._initPage().then((value) {
+                                              setState(() {
+                                                Shared.finishedLoadingTasks = true;
+                                              });
+                                            });
+                                          } else {}
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.delete_forever,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                Shared.tasks['data'][index]['attributes']
+                                ['status'] ==
+                                    "pending"
+                                    ? Text(
+                                  "pending",
+                                  style: TextStyle(fontSize: 11),
+                                )
+                                    : Shared.tasks['data'][index]['attributes']
+                                ['status'] ==
+                                    "doing"
+                                    ? Text(
+                                  "doing",
+                                  style: TextStyle(fontSize: 11, color: Colors.blue),
+                                )
+                                    : Shared.tasks['data'][index]['attributes']
+                                ['status'] ==
+                                    "finished"
+                                    ? Text(
+                                  "finished",
+                                  style: TextStyle(color: Colors.green),
+                                )
+                                    : Text(
+                                  "rejected",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
                             ),
                           ],
                         ),
